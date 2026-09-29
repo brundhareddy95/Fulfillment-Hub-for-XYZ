@@ -1,0 +1,25 @@
+const fs = require("fs"); const vm = require("vm");
+const files = ["01_data.jsx","02_helpers.jsx","03_reducer.jsx"];
+const code = files.map(f=>fs.readFileSync(require("path").join(__dirname,"..","src",f),"utf8")).join("\n")+"\nmodule.exports={buildInitialState,reducer,attentionItems,STATUS_FLOW,HOUR,MIN,fmtDuration};";
+const sb={window:{localStorage:{getItem:()=>null,setItem(){}}},module:{exports:{}},console};
+vm.createContext(sb); vm.runInContext(code,sb);
+const {buildInitialState,reducer,attentionItems,STATUS_FLOW,HOUR,fmtDuration}=sb.module.exports;
+let st=reducer(buildInitialState(),{type:"TICK",ms:0});
+const P=id=>st.products.find(p=>p.id===id);
+console.log("== counts ==", STATUS_FLOW.map(s=>s+":"+st.orders.filter(o=>o.status===s).length).join("  "));
+console.log("\n== PICK QUEUE (warehouse order) ==");
+st.orders.filter(o=>o.status==="picking").sort((a,b)=>(b.priority-a.priority)||(a.statusSince-b.statusSince)).forEach((o,i)=>{
+  const items=o.items.map(it=>{const p=P(it.productId);const short=Math.max(0,it.qty-p.mainStock);
+    return p.name+" ("+p.variant+") x"+it.qty+(short?(p.secondaryStock>=short?" [NEEDS TRANSFER, B has "+p.secondaryStock+"]":" [TRUE SHORTAGE main "+p.mainStock+" + B "+p.secondaryStock+"]"):"");}).join("; ");
+  console.log((i+1)+". "+o.id+" "+o.customer+(o.priority?" *PRIORITY*":"")+" :: "+items);
+});
+console.log("\n== PACK QUEUE ==");
+st.orders.filter(o=>o.status==="packing").sort((a,b)=>(b.priority-a.priority)||(a.statusSince-b.statusSince)).slice(0,3).forEach((o,i)=>console.log((i+1)+". "+o.id+" "+o.customer+(o.priority?" *PRIORITY*":"")));
+console.log("\n== ATTENTION ==");
+attentionItems(st).forEach(a=>console.log(a.order.id,a.order.customer,"|",a.reasons.map(r=>r.label).join(" | ")));
+console.log("\n== OPEN EXCEPTIONS ==");
+st.exceptions.filter(e=>e.status==="open").forEach(e=>console.log(e.type,e.orderId,e.note));
+console.log("\n== PROCESSING w/o courier ==");
+st.orders.filter(o=>o.status==="processing").forEach(o=>console.log(o.id,o.customer,o.courierId||"(no courier)",o.priority?"PRIORITY":""));
+console.log("\n== Low / out stock ==");
+st.products.filter(p=>p.mainStock<=p.reorder).forEach(p=>console.log(p.name,p.variant,"main",p.mainStock,"B",p.secondaryStock));

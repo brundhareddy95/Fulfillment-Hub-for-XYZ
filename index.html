@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>XYZ Fulfillment Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  color-scheme: light;
+  --ink: #1B1F1D;
+  --ink-soft: #55605A;
+  --ink-faint: #7C867F;
+  --paper: #EEF1EC;
+  --panel: #FFFFFF;
+  --line: #D9DED4;
+  --line-strong: #B7C0AF;
+  --accent: #F0AF00;
+  --accent-ink: #1B1F1D;
+  --good: #1F7A5C;
+  --good-bg: #E3F1E9;
+  --info: #2F5D73;
+  --info-bg: #E6EEF1;
+  --danger: #BD4128;
+  --danger-bg: #FBEAE4;
+  --font-display: "Barlow Semi Condensed", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --radius-sm: 4px;
+  --radius-md: 7px;
+  --shadow-panel: 0 1px 2px rgba(27,31,29,0.06), 0 8px 24px rgba(27,31,29,0.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ink: #EEF0EA;
+    --ink-soft: #A9B2A5;
+    --ink-faint: #78827A;
+    --paper: #141815;
+    --panel: #1C2220;
+    --line: #2B322D;
+    --line-strong: #3C463E;
+    --accent: #F0AF00;
+    --accent-ink: #141815;
+    --good: #57C79A;
+    --good-bg: #17332A;
+    --info: #7FB2C9;
+    --info-bg: #182C33;
+    --danger: #E48467;
+    --danger-bg: #3A2119;
+    --shadow-panel: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+    }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #EEF0EA;
+  --ink-soft: #A9B2A5;
+  --ink-faint: #78827A;
+  --paper: #141815;
+  --panel: #1C2220;
+  --line: #2B322D;
+  --line-strong: #3C463E;
+  --accent: #F0AF00;
+  --accent-ink: #141815;
+  --good: #57C79A;
+  --good-bg: #17332A;
+  --info: #7FB2C9;
+  --info-bg: #182C33;
+  --danger: #E48467;
+  --danger-bg: #3A2119;
+  --shadow-panel: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; }
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+#root { min-height: 100%; }
+
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; margin: 0; letter-spacing: 0.01em; }
+.mono { font-family: var(--font-mono); }
+a { color: inherit; }
+button { font-family: var(--font-body); cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--info);
+  outline-offset: 2px;
+}
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* ---------- layout shell ---------- */
+.app-shell { min-height: 100%; display: flex; flex-direction: column; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 18px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: baseline; gap: 8px; margin-right: auto; }
+.brand .mark {
+  width: 30px; height: 30px; border-radius: var(--radius-sm);
+  background: var(--ink); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 17px;
+  flex: none;
+}
+.brand h1 { font-size: 19px; }
+.brand .tagline { font-size: 12px; color: var(--ink-faint); font-family: var(--font-body); }
+
+.role-toggle { display: flex; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+.role-toggle button {
+  border: none; background: transparent; padding: 7px 15px; border-radius: 999px;
+  font-family: var(--font-display); font-size: 14.5px; font-weight: 600; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px;
+}
+.role-toggle button.active { background: var(--ink); color: var(--paper); }
+
+.clock-widget { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-soft); }
+.clock-widget .time { color: var(--ink); font-size: 15px; }
+.ff-btn { border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink-soft); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 12px; font-family: var(--font-body); }
+.ff-btn:hover { border-color: var(--info); color: var(--info); }
+
+.stat-chip { display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); font-size: 12.5px; color: var(--ink-soft); }
+.stat-chip.warn { background: var(--danger-bg); color: var(--danger); border-color: transparent; font-weight: 600; }
+.stat-chip b { color: inherit; font-family: var(--font-mono); }
+
+.reset-link { font-size: 12px; color: var(--ink-faint); background: none; border: none; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------- office: tabs ---------- */
+.office-tabs { display: flex; gap: 4px; padding: 0 18px; background: var(--panel); border-bottom: 1px solid var(--line); overflow-x: auto; }
+.office-tabs button {
+  border: none; background: none; padding: 12px 14px 10px; font-family: var(--font-display);
+  font-size: 15px; font-weight: 600; color: var(--ink-faint); border-bottom: 2.5px solid transparent; white-space: nowrap;
+}
+.office-tabs button.active { color: var(--ink); border-color: var(--accent); }
+.office-tabs .count { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-left: 5px; }
+
+.office-body { flex: 1; padding: 18px; max-width: 1400px; width: 100%; margin: 0 auto; }
+
+.filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-bar input[type="text"] {
+  border: 1px solid var(--line-strong); background: var(--panel); border-radius: var(--radius-sm);
+  padding: 7px 10px; font-size: 13.5px; color: var(--ink); min-width: 200px;
+}
+.chip-toggle { border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink-soft); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+.chip-toggle.active { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.select-plain { border: 1px solid var(--line-strong); background: var(--panel); border-radius: var(--radius-sm); padding: 6px 8px; font-size: 13px; color: var(--ink); }
+
+/* ---------- kanban ---------- */
+.kanban { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; align-items: flex-start; }
+.kanban-col { flex: 1 1 200px; min-width: 200px; max-width: 280px; }
+.kanban-col-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 10px; }
+.kanban-col-head h3 { font-size: 15px; }
+.kanban-col-head .n { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); background: var(--panel); border: 1px solid var(--line); padding: 1px 7px; border-radius: 999px; }
+.kanban-drop { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
+
+.order-card {
+  background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--line);
+  border-radius: var(--radius-sm); padding: 10px 11px; cursor: pointer; position: relative;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+.order-card:hover { border-color: var(--line-strong); border-left-color: var(--ink-soft); }
+.order-card.is-priority { border-left-color: var(--accent); }
+.order-card.is-overdue { border-left-color: var(--danger); }
+.order-card .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+.order-card .oid { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); }
+.order-card .customer { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.order-card .meta-row { display: flex; align-items: center; gap: 9px; font-size: 11.5px; color: var(--ink-faint); flex-wrap: wrap; margin-top: 6px; }
+.order-card .age { font-family: var(--font-mono); }
+.order-card .age.warn { color: var(--danger); font-weight: 600; }
+.badge-flag {
+  position: absolute; top: -6px; right: -6px; width: 19px; height: 19px; border-radius: 50%;
+  background: var(--danger); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px;
+  border: 2px solid var(--paper);
+}
+.pin-star { color: var(--accent); }
+.channel-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); display: inline-block; }
+
+/* ---------- chips / badges ---------- */
+.chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.chip.good { background: var(--good-bg); color: var(--good); }
+.chip.info { background: var(--info-bg); color: var(--info); }
+.chip.danger { background: var(--danger-bg); color: var(--danger); }
+.chip.neutral { background: var(--paper); color: var(--ink-soft); border: 1px solid var(--line); }
+.chip.accent { background: var(--accent); color: var(--accent-ink); }
+
+/* ---------- panels / tables ---------- */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-md); }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.data-table th { text-align: left; font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--ink-soft); padding: 9px 12px; border-bottom: 1px solid var(--line); background: var(--paper); position: sticky; top: 0; }
+.data-table td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table .sku { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); }
+.table-scroll { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--line); }
+.table-scroll .data-table { border: none; }
+.table-scroll .data-table th:first-child, .table-scroll .data-table td:first-child { padding-left: 14px; }
+
+.btn { border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink); padding: 7px 13px; font-size: 13.5px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--ink-soft); }
+.btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn.primary:hover { opacity: 0.9; }
+.btn.accent { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.danger-ghost { color: var(--danger); border-color: var(--danger-bg); }
+.btn.danger-ghost:hover { border-color: var(--danger); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.sm { padding: 4px 9px; font-size: 12px; }
+.btn.block { width: 100%; justify-content: center; }
+
+/* ---------- drawer ---------- */
+.overlay { position: fixed; inset: 0; background: rgba(20,24,21,0.4); z-index: 60; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100vw);
+  background: var(--panel); z-index: 61; box-shadow: var(--shadow-panel);
+  display: flex; flex-direction: column;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.drawer-head { padding: 16px 18px 12px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 16px 18px 24px; }
+.drawer-close { border: none; background: none; color: var(--ink-faint); font-size: 20px; line-height: 1; padding: 2px; }
+.drawer section { margin-bottom: 20px; }
+.drawer section h4 { font-size: 12.5px; text-transform: none; color: var(--ink-faint); margin-bottom: 9px; font-family: var(--font-body); font-weight: 600; letter-spacing: 0.02em; }
+
+.stepper { display: flex; align-items: center; }
+.stepper .step { flex: 1; text-align: center; position: relative; }
+.stepper .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--line-strong); color: var(--ink-faint); display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--font-mono); margin: 0 auto 5px; }
+.stepper .step.done .dot { background: var(--good); border-color: var(--good); color: #fff; }
+.stepper .step.current .dot { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.stepper .label { font-size: 10.5px; color: var(--ink-faint); }
+.stepper .step.current .label { color: var(--ink); font-weight: 600; }
+.stepper .bar { position: absolute; top: 11px; left: -50%; right: 50%; height: 1.5px; background: var(--line-strong); z-index: -1; }
+.stepper .step.done .bar, .stepper .step.current .bar { background: var(--good); }
+.stepper .step:first-child .bar { display: none; }
+
+.item-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.item-row:last-child { border-bottom: none; }
+.item-row .swatch { width: 30px; height: 30px; border-radius: var(--radius-sm); background: var(--paper); border: 1px solid var(--line); flex: none; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--ink-faint); font-family: var(--font-mono); }
+.item-row .name { font-size: 13.5px; font-weight: 500; }
+.item-row .variant { font-size: 12px; color: var(--ink-faint); }
+.item-row .qty { font-family: var(--font-mono); font-size: 13px; color: var(--ink-soft); margin-left: auto; }
+
+textarea.notes-field { width: 100%; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 8px 10px; font-family: var(--font-body); font-size: 13.5px; resize: vertical; min-height: 60px; background: var(--panel); color: var(--ink); }
+
+/* ---------- exceptions ---------- */
+.exception-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: flex-start; }
+.exception-row:last-child { border-bottom: none; }
+.exception-row .ico { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; background: var(--danger-bg); color: var(--danger); }
+.exception-row.resolved .ico { background: var(--good-bg); color: var(--good); }
+.exception-row .body { flex: 1; min-width: 0; }
+.exception-row .note { font-size: 13.5px; margin: 2px 0 4px; }
+.exception-row .meta { font-size: 12px; color: var(--ink-faint); }
+
+/* ---------- toasts ---------- */
+.toast-stack { position: fixed; bottom: 18px; right: 18px; z-index: 90; display: flex; flex-direction: column; gap: 8px; max-width: 320px; }
+.toast { background: var(--ink); color: var(--paper); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13.5px; box-shadow: var(--shadow-panel); animation: toast-in 160ms ease; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ============================================================
+   WAREHOUSE MODE — deliberately its own dark, high-contrast,
+   tactile look regardless of system theme: this is meant to
+   read like a dock console, not a desktop dashboard.
+   ============================================================ */
+.wh-shell { background: #14181A; color: #F4F4F0; min-height: calc(100vh - 58px); display: flex; flex-direction: column; }
+.wh-segment { display: flex; border-bottom: 1px solid #2B3134; overflow-x: auto; }
+.wh-segment button {
+  flex: 1; min-width: 110px; border: none; background: none; color: #A9B0AC; padding: 14px 8px 12px;
+  font-family: var(--font-display); font-size: 15px; font-weight: 600; border-bottom: 3px solid transparent;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.wh-segment button.active { color: #F4F4F0; border-color: #F0AF00; }
+.wh-segment .badge-dot { min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px; background: #FF6A4D; color: #14181A; font-size: 10px; font-family: var(--font-mono); display: flex; align-items: center; justify-content: center; }
+
+.wh-body { flex: 1; padding: 18px; max-width: 640px; margin: 0 auto; width: 100%; }
+.wh-empty { text-align: center; padding: 60px 20px; color: #7C8480; }
+.wh-empty .big-emoji { font-size: 40px; margin-bottom: 12px; }
+
+.wh-queue-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.wh-queue-head .of { font-family: var(--font-mono); font-size: 13px; color: #7C8480; }
+.wh-order-title { font-family: var(--font-display); font-size: 26px; font-weight: 600; }
+.wh-order-sub { color: #A9B0AC; font-size: 14px; margin-top: 2px; }
+
+.wh-progress { height: 6px; background: #262C2E; border-radius: 999px; overflow: hidden; margin: 14px 0 18px; }
+.wh-progress > div { height: 100%; background: #F0AF00; transition: width 200ms ease; }
+
+.wh-item-card { background: #1F2528; border: 1px solid #2B3134; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+.wh-item-card.done { border-color: #2E5B47; background: #17241F; }
+.wh-item-card .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.wh-item-card .pname { font-family: var(--font-display); font-size: 21px; font-weight: 600; line-height: 1.2; }
+.wh-item-card .pvariant { color: #A9B0AC; font-size: 14px; margin-top: 2px; }
+.wh-item-card .pqty { font-family: var(--font-mono); font-size: 26px; font-weight: 600; color: #F0AF00; text-align: right; }
+.wh-item-card .pqty span { font-size: 12px; color: #7C8480; display: block; font-family: var(--font-body); }
+.wh-loc-chip { display: inline-flex; align-items: center; gap: 6px; background: #262C2E; color: #F4F4F0; font-family: var(--font-mono); font-size: 15px; padding: 5px 11px; border-radius: 6px; margin-top: 10px; }
+.wh-actions { display: flex; gap: 10px; margin-top: 14px; }
+.wh-btn { flex: 1; border: none; border-radius: 8px; padding: 14px 10px; font-family: var(--font-display); font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.wh-btn.go { background: #F0AF00; color: #14181A; }
+.wh-btn.ghost { background: transparent; border: 1.5px solid #3C464A; color: #C7CCC8; flex: 0 0 auto; padding: 14px 16px; }
+.wh-btn.wide { flex: 1; }
+.wh-btn:disabled { opacity: 0.4; }
+.wh-btn.big { padding: 18px 10px; font-size: 18px; }
+
+.wh-inline-alert { background: #3A2119; border: 1px solid #5A3225; color: #F0B79C; border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-size: 14px; }
+.wh-inline-alert .cta { margin-top: 10px; }
+
+.wh-panel { background: #1F2528; border: 1px solid #2B3134; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+.wh-panel .row1 { display: flex; justify-content: space-between; align-items: center; }
+.wh-panel .oid { font-family: var(--font-mono); font-size: 13px; color: #7C8480; }
+.wh-panel .customer { font-family: var(--font-display); font-size: 18px; font-weight: 600; margin-top: 1px; }
+.wh-panel .sub { color: #A9B0AC; font-size: 13.5px; margin-top: 3px; }
+
+.wh-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.wh-pill.priority { background: #F0AF00; color: #14181A; }
+.wh-pill.overdue { background: #FF6A4D; color: #14181A; }
+.wh-pill.ok { background: #234A3A; color: #57C79A; }
+.wh-pill.neutral { background: #262C2E; color: #A9B0AC; }
+
+.wh-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wh-type-btn { background: #1F2528; border: 1.5px solid #2B3134; border-radius: 10px; padding: 20px 10px; text-align: center; color: #F4F4F0; }
+.wh-type-btn .emoji { font-size: 26px; display: block; margin-bottom: 8px; }
+.wh-type-btn.selected { border-color: #F0AF00; background: #262410; }
+
+.wh-textarea { width: 100%; background: #1F2528; border: 1.5px solid #2B3134; border-radius: 8px; color: #F4F4F0; padding: 12px; font-family: var(--font-body); font-size: 15px; min-height: 90px; }
+.wh-search { width: 100%; background: #1F2528; border: 1.5px solid #2B3134; border-radius: 8px; color: #F4F4F0; padding: 11px 12px; font-size: 15px; margin-bottom: 8px; }
+.wh-pick-suggestion { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: #1F2528; margin-bottom: 6px; border: 1.5px solid transparent; }
+.wh-pick-suggestion.selected { border-color: #F0AF00; }
+
+.label-preview { background: #fff; color: #111; border-radius: 4px; padding: 20px; font-family: var(--font-mono); border: 2px dashed #999; }
+.label-preview .lrow { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+.label-preview .lto { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+.label-preview .barcode { display: flex; gap: 2px; height: 44px; margin: 14px 0 6px; align-items: stretch; }
+.label-preview .barcode span { display: inline-block; background: #111; }
+.label-preview .lid { text-align: center; font-size: 13px; letter-spacing: 0.08em; }
+
+/* ---------- pickup groups ---------- */
+.pickup-group-head { display: flex; align-items: center; gap: 10px; margin: 18px 0 8px; }
+.pickup-group-head:first-child { margin-top: 0; }
+.pickup-group-head h4 { font-family: var(--font-display); font-size: 15px; }
+.pickup-group-head .line { flex: 1; height: 1px; background: #2B3134; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 780px) {
+  .office-body { padding: 12px; }
+  .kanban { flex-direction: column; }
+  .kanban-col { max-width: none; }
+  .drawer { width: 100vw; }
+  .topbar { gap: 10px; padding: 10px 12px; padding-top: calc(10px + env(safe-area-inset-top, 0px)); }
+  .brand .tagline { display: none; }
+  .stat-chip { display: none; }
+  .wh-type-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 781px) {
+  .wh-body { max-width: 560px; }
+}
+
+/* ---------- needs-attention panel ---------- */
+.attention { padding: 12px 14px 10px; margin-bottom: 16px; }
+.attention-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.attention-head h3 { font-size: 16px; }
+.n-pill { font-family: var(--font-mono); font-size: 12px; background: var(--danger); color: #fff; border-radius: 999px; padding: 0 8px; line-height: 19px; }
+.attention-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2px 14px; }
+.attention-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: none; background: transparent; border-radius: var(--radius-sm); text-align: left; color: var(--ink); font-size: 13.5px; width: 100%; }
+.attention-row:hover { background: var(--paper); }
+.attention-row .aid { font-size: 12.5px; color: var(--ink-soft); flex: none; }
+.attention-row .acust { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.attention-row .amore { font-size: 12px; color: var(--ink-faint); font-family: var(--font-mono); }
+.attention-more { font-size: 12.5px; color: var(--ink-faint); padding: 6px 8px 0; }
+
+/* warehouse mode: the whole chrome goes dark, not just the body */
+.app-shell.is-wh { background: #14181A; }
+.is-wh .topbar { background: #1A1F21; border-bottom-color: #2B3134; }
+.is-wh .brand h1 { color: #F4F4F0; }
+.is-wh .brand .tagline, .is-wh .reset-link { color: #7C8480; }
+.is-wh .brand .mark { background: #F0AF00; color: #14181A; }
+.is-wh .role-toggle { background: #14181A; border-color: #2B3134; }
+.is-wh .role-toggle button { color: #A9B0AC; }
+.is-wh .role-toggle button.active { background: #F0AF00; color: #14181A; }
+.is-wh .clock-widget { color: #A9B0AC; }
+.is-wh .clock-widget .time { color: #F4F4F0; }
+.is-wh .ff-btn { background: #1F2528; border-color: #3C464A; color: #A9B0AC; }
+.wh-segment button.report { color: #FF9B85; }
+.wh-segment button.report.active { color: #F4F4F0; }
+.wh-panel .row1.stack { flex-direction: column; align-items: stretch; gap: 12px; }
+.wh-btn.block { width: 100%; flex: none; }
+.label-preview .barcode { justify-content: space-between; }
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.28.4/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+/* ============================================================
+   XYZ Fulfillment Hub — data layer
+   Seeded sample data so the demo looks the same on every load,
+   plus a small virtual clock so delays/missed pickups can be
+   demonstrated without waiting in real time.
+   ============================================================ */
+
+// ---- seeded RNG (mulberry32) so demo data is reproducible ----
+function makeRng(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const rng = makeRng(20260926);
+const pick = (arr) => arr[Math.floor(rng() * arr.length)];
+const randInt = (min, max) => Math.floor(rng() * (max - min + 1)) + min;
+
+const HOUR = 60 * 60 * 1000;
+const MIN = 60 * 1000;
+
+const PRODUCTS_SEED = [
+  ["Harbor Canvas Tote", "HCT-BLK", "Black", "Bags", "B2"],
+  ["Harbor Canvas Tote", "HCT-SND", "Sand", "Bags", "B2"],
+  ["Ridgeline Water Bottle", "RWB-24-GRN", "24oz / Green", "Drinkware", "A1"],
+  ["Ridgeline Water Bottle", "RWB-24-SLT", "24oz / Slate", "Drinkware", "A1"],
+  ["Ridgeline Water Bottle", "RWB-32-SLT", "32oz / Slate", "Drinkware", "A1"],
+  ["Cascade Fleece Pullover", "CFP-M-NVY", "M / Navy", "Apparel", "C4"],
+  ["Cascade Fleece Pullover", "CFP-L-NVY", "L / Navy", "Apparel", "C4"],
+  ["Cascade Fleece Pullover", "CFP-L-OLV", "L / Olive", "Apparel", "C4"],
+  ["Cascade Fleece Pullover", "CFP-XL-OLV", "XL / Olive", "Apparel", "C4"],
+  ["Basecamp Enamel Mug", "BEM-12-BLU", "12oz / Blue", "Drinkware", "A3"],
+  ["Basecamp Enamel Mug", "BEM-12-RED", "12oz / Red", "Drinkware", "A3"],
+  ["Trailhead Notebook", "TNB-DOT", "Dot grid", "Stationery", "D1"],
+  ["Trailhead Notebook", "TNB-LND", "Lined", "Stationery", "D1"],
+  ["Summit Beanie", "SB-CHR", "Charcoal", "Apparel", "C1"],
+  ["Summit Beanie", "SB-RST", "Rust", "Apparel", "C1"],
+  ["Basecamp Enamel Plate Set", "BEP-SET4", "Set of 4", "Kitchen", "A4"],
+  ["Ridgeline Sling Pack", "RSP-BLK", "Black", "Bags", "B1"],
+  ["Cascade Rain Shell", "CRS-M-YLW", "M / Yellow", "Apparel", "C5"],
+];
+
+function buildProducts() {
+  return PRODUCTS_SEED.map(([name, sku, variant, category, aisle], i) => {
+    // A handful of products are deliberately tight on stock at Main so the
+    // transfer-from-Warehouse-B flow has something real to show.
+    const tight = [1, 6, 10, 15].includes(i);
+    const out = [15].includes(i);
+    const main = out ? 0 : tight ? randInt(0, 2) : randInt(8, 60);
+    const secondary = out || tight ? randInt(3, 14) : randInt(0, 20);
+    return {
+      id: "P" + (i + 1),
+      name, sku, variant, category,
+      location: aisle + "-" + (10 + i),
+      mainStock: main,
+      secondaryStock: secondary,
+      reorder: 6,
+    };
+  });
+}
+
+const COURIERS = [
+  { id: "CR1", name: "Speedy Express", cost: 8.5, speedDays: 1, pickups: ["12:30", "16:30"], blurb: "Next-day, priciest" },
+  { id: "CR2", name: "MetroCourier", cost: 6.0, speedDays: 2, pickups: ["14:00"], blurb: "Two-day, balanced" },
+  { id: "CR3", name: "ValueShip", cost: 3.75, speedDays: 4, pickups: ["17:00"], blurb: "Cheapest, slowest" },
+];
+
+const CHANNELS = ["Marketplace", "XYZ Website", "Social Shop"];
+const FIRST = ["Amara", "Leo", "Priya", "Noah", "Yuki", "Diego", "Freya", "Sam", "Ines", "Tomas", "Maya", "Owen", "Zara", "Kian", "Elin", "Rosa", "Jin", "Nora"];
+const LAST = ["Chen", "Okafor", "Lindqvist", "Park", "Silva", "Kowalski", "Haddad", "Reyes", "Novak", "Bianchi", "Sato", "Murphy"];
+
+function randomCustomer() { return pick(FIRST) + " " + pick(LAST); }
+function randomItems(products) {
+  const n = randInt(1, 3);
+  const chosen = [];
+  const used = new Set();
+  for (let i = 0; i < n; i++) {
+    let p = pick(products);
+    let guard = 0;
+    while (used.has(p.id) && guard++ < 10) p = pick(products);
+    used.add(p.id);
+    chosen.push({ productId: p.id, qty: randInt(1, 3) });
+  }
+  return chosen;
+}
+
+let orderSeq = 10381;
+let slotCounter = 0;
+function nextSeedSlot() { return "S-" + String((slotCounter++ % 24) + 1).padStart(2, "0"); }
+function nextOrderId() { return "XYZ-" + orderSeq++; }
+
+// STATUS_FLOW mirrors the physical pipeline in the brief.
+const STATUS_FLOW = ["received", "processing", "picking", "packing", "staged", "shipped"];
+const STATUS_LABEL = {
+  received: "Received", processing: "Processing", picking: "Picking",
+  packing: "Packing", staged: "Staged", shipped: "Shipped",
+};
+
+function makeOrder(products, { status, ageHours, statusAgeHours, priority, courierId, withException, pickupPassed, needsTransfer, deadlineHours }) {
+  const now = Date.now();
+  const createdAt = now - ageHours * HOUR - randInt(0, 40) * MIN;
+  // How long the order has sat in ITS CURRENT status — independent of total age,
+  // since an order can be old overall but just arrived in this status. Callers
+  // that want to demonstrate a stall (the "delays go unnoticed" problem) pass
+  // statusAgeHours explicitly; everything else gets a modest, varied default.
+  const effectiveStatusAge = statusAgeHours != null ? statusAgeHours : Math.min(ageHours, 0.2 + rng() * 1.6);
+  const order = {
+    id: nextOrderId(),
+    channel: pick(CHANNELS),
+    customer: randomCustomer(),
+    items: randomItems(products),
+    priority: !!priority,
+    status,
+    createdAt,
+    statusSince: now - effectiveStatusAge * HOUR,
+    courierId: courierId || null,
+    deadline: priority ? createdAt + (deadlineHours != null ? deadlineHours : randInt(6, 10)) * HOUR : null,
+    stagingSlot: null,
+    pickupWindow: null,
+    pickupMissedFlagged: false,
+    pickedItems: {},
+    packedItems: {},
+    notes: "",
+    history: [{ status: "received", at: createdAt }],
+  };
+  if (["picking", "packing", "staged", "shipped"].includes(status)) {
+    order.courierId = courierId || pick(COURIERS).id;
+  }
+  if (status === "packing" || status === "staged" || status === "shipped") {
+    order.items.forEach((it) => { order.pickedItems[it.productId] = true; });
+  }
+  if (status === "staged" || status === "shipped") {
+    order.items.forEach((it) => { order.packedItems[it.productId] = true; });
+  }
+  if (status === "staged" || status === "shipped") {
+    order.stagingSlot = nextSeedSlot();
+    // Pickup windows are set relative to "now" so the demo looks right at any
+    // time of day: upcoming ones are 30-240 min away, missed ones 20-90 min ago.
+    const cutoffMs = pickupPassed ? now - randInt(20, 90) * MIN : now + randInt(30, 240) * MIN;
+    const cd = new Date(cutoffMs);
+    order.pickupWindow = { label: cd.getHours() + ":" + String(cd.getMinutes()).padStart(2, "0"), cutoff: cutoffMs };
+    if (status === "shipped") {
+      const shippedCutoff = createdAt + randInt(2, 20) * HOUR;
+      const sd = new Date(shippedCutoff);
+      order.pickupWindow = { label: sd.getHours() + ":" + String(sd.getMinutes()).padStart(2, "0"), cutoff: shippedCutoff };
+    }
+  }
+  order._seedException = withException || null;
+  order._needsTransfer = !!needsTransfer;
+  return order;
+}
+
+function buildOrders(products) {
+  const orders = [];
+  const specs = [
+    // status, count, priority-count-within, extra
+    ...Array(7).fill({ status: "received", ageHours: 0.3 }),
+    { status: "received", ageHours: 0.4, priority: true },
+    ...Array(5).fill({ status: "processing", ageHours: 1 }),
+    { status: "processing", ageHours: 5.5, statusAgeHours: 5.2, priority: true, deadlineHours: 7 }, // stuck without a courier — aging, at risk
+    ...Array(8).fill({ status: "picking", ageHours: 2 }),
+    { status: "picking", ageHours: 1, statusAgeHours: 0.8, priority: true, needsTransfer: true, deadlineHours: 6 }, // priority order whose stock sits in Warehouse B
+    { status: "picking", ageHours: 8.5, statusAgeHours: 6.5, priority: true, deadlineHours: 7 }, // overdue on arrival, sitting a long time
+    { status: "picking", ageHours: 3, statusAgeHours: 2.5, withException: "missing_stock" },
+    ...Array(5).fill({ status: "packing", ageHours: 3 }),
+    { status: "packing", ageHours: 5, statusAgeHours: 4.3, priority: true, deadlineHours: 8 }, // aging in packing too
+    ...Array(6).fill({ status: "staged", ageHours: 4 }),
+    { status: "staged", ageHours: 3, priority: true },
+    { status: "staged", ageHours: 5, withException: "misplaced_box" },
+    { status: "staged", ageHours: 6, pickupPassed: true }, // will auto-flag missed pickup on load
+    ...Array(12).fill({ status: "shipped", ageHours: 30 }),
+  ];
+  specs.forEach((spec) => orders.push(makeOrder(products, spec)));
+
+  // The "missing stock" demo order must reflect a REAL shortage, not a random
+  // one: swap in the scarce product and ask for more than both warehouses hold.
+  const scarce = products[15];
+  const shortOrder = orders.find((o) => o._seedException === "missing_stock");
+  if (shortOrder) {
+    const rest = shortOrder.items.filter((it) => it.productId !== scarce.id).slice(0, 1);
+    shortOrder.items = [{ productId: scarce.id, qty: scarce.mainStock + scarce.secondaryStock + 2 }, ...rest];
+  }
+
+  // Priority order that needs a stock transfer: Main is short by 2, Warehouse B has plenty.
+  const transferProduct = products[6];
+  const transferOrder = orders.find((o) => o._needsTransfer);
+  if (transferOrder) {
+    const rest = transferOrder.items.filter((it) => it.productId !== transferProduct.id).slice(0, 1);
+    transferOrder.items = [{ productId: transferProduct.id, qty: transferProduct.mainStock + 2 }, ...rest];
+  }
+  orders.forEach((o) => { delete o._needsTransfer; });
+  return orders;
+}
+
+function buildExceptions(orders, products) {
+  const exceptions = [];
+  let seq = 1;
+  const now = Date.now();
+  orders.forEach((o) => {
+    if (o._seedException === "missing_stock") {
+      const item = o.items[0];
+      const p = products.find((pr) => pr.id === item.productId);
+      exceptions.push({
+        id: "EX" + seq++, orderId: o.id, type: "missing_stock",
+        note: p.name + " (" + p.variant + ") short by " + Math.max(1, item.qty - p.mainStock - p.secondaryStock) + " unit(s) — not enough at Main or Warehouse B.",
+        reportedBy: "warehouse", status: "open", createdAt: now - randInt(20, 90) * MIN, resolvedAt: null,
+      });
+    }
+    if (o._seedException === "misplaced_box") {
+      exceptions.push({
+        id: "EX" + seq++, orderId: o.id, type: "misplaced_box",
+        note: "Box isn't in its staging slot — being searched for before the courier arrives.",
+        reportedBy: "warehouse", status: "open", createdAt: now - randInt(10, 60) * MIN, resolvedAt: null,
+      });
+    }
+    delete o._seedException;
+  });
+  // one resolved exception for history/context
+  const shippedOrder = orders.find((o) => o.status === "shipped");
+  if (shippedOrder) {
+    exceptions.push({
+      id: "EX" + seq++, orderId: shippedOrder.id, type: "wrong_item",
+      note: "Wrong variant was pulled during picking; caught at packing and corrected.",
+      reportedBy: "warehouse", status: "resolved", createdAt: now - 26 * HOUR, resolvedAt: now - 25 * HOUR,
+    });
+  }
+  return exceptions;
+}
+
+function buildInitialState() {
+  const products = buildProducts();
+  const orders = buildOrders(products);
+  const exceptions = buildExceptions(orders, products);
+  return {
+    products, orders, exceptions, couriers: COURIERS,
+    now: Date.now(),
+    nextSlotSeq: (slotCounter % 24) + 1,
+    nextExceptionSeq: exceptions.length + 1,
+    createdAt: Date.now(),
+  };
+}
+/* ============================================================
+   Helpers: persistence + time formatting
+   ============================================================ */
+
+const STORAGE_KEY = "xyz-fulfillment-hub-v1";
+
+function loadState() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.orders) || typeof parsed.now !== "number") return null;
+    return parsed;
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveState(state) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    /* storage unavailable — demo still works in-memory for this session */
+  }
+}
+
+function fmtClock(ts) {
+  const d = new Date(ts);
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+function fmtDate(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString([], { month: "short", day: "numeric" });
+}
+
+function fmtDuration(ms) {
+  const mins = Math.round(ms / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + "m";
+  const hrs = Math.floor(mins / 60);
+  const rem = mins % 60;
+  if (hrs < 24) return hrs + "h" + (rem ? " " + rem + "m" : "");
+  const days = Math.floor(hrs / 24);
+  return days + "d " + (hrs % 24) + "h";
+}
+
+// Positive = time remaining, negative = overdue
+function timeUntil(now, ts) { return ts - now; }
+
+function ageLabel(now, since) { return now - since < MIN ? "just now" : fmtDuration(now - since) + " ago"; }
+
+function relFuture(now, ts) {
+  const d = ts - now;
+  if (d <= 0) return fmtDuration(-d) + " overdue";
+  return "in " + fmtDuration(d);
+}
+
+function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+function classNames(...xs) { return xs.filter(Boolean).join(" "); }
+
+function stockStatus(p) {
+  const total = p.mainStock + p.secondaryStock;
+  if (p.mainStock <= 0 && p.secondaryStock <= 0) return "out";
+  if (p.mainStock <= p.reorder) return "low";
+  return "ok";
+}
+
+function orderStockCheck(order, products) {
+  // returns array of {productId, product, qty, mainAvail, secondaryAvail, short}
+  return order.items.map((it) => {
+    const p = products.find((pr) => pr.id === it.productId);
+    return {
+      productId: it.productId,
+      product: p,
+      qty: it.qty,
+      mainAvail: p.mainStock >= it.qty,
+      secondaryAvail: p.secondaryStock >= it.qty,
+      short: p.mainStock + p.secondaryStock < it.qty,
+    };
+  });
+}
+
+const EXCEPTION_TYPES = [
+  { id: "missing_stock", label: "Missing stock", icon: "\u26A0" },
+  { id: "wrong_item", label: "Wrong item", icon: "\u21C4" },
+  { id: "misplaced_box", label: "Box misplaced", icon: "\u2591" },
+  { id: "missed_pickup", label: "Missed pickup", icon: "\u23F1" },
+  { id: "other", label: "Other", icon: "\u2022" },
+];
+function exceptionLabel(type) {
+  const t = EXCEPTION_TYPES.find((x) => x.id === type);
+  return t ? t.label : "Other";
+}
+
+// Everything the office should look at first, most urgent first. One row per
+// order, with its most severe reason leading.
+function attentionItems(state) {
+  const now = state.now;
+  const out = [];
+  state.orders.forEach((o) => {
+    if (o.status === "shipped") return;
+    const reasons = [];
+    if (o.priority && o.deadline && now > o.deadline) reasons.push({ sev: 0, kind: "danger", label: "Priority deadline missed" });
+    if (o.status === "staged" && o.pickupWindow && now > o.pickupWindow.cutoff) reasons.push({ sev: 1, kind: "danger", label: "Courier pickup missed" });
+    if (state.exceptions.some((e) => e.orderId === o.id && e.status === "open")) reasons.push({ sev: 2, kind: "danger", label: "Open exception" });
+    if (o.priority && o.deadline && now <= o.deadline && o.deadline - now < 2 * HOUR) reasons.push({ sev: 3, kind: "accent", label: "Priority due in " + fmtDuration(o.deadline - now) });
+    if (now - o.statusSince > 4 * HOUR) reasons.push({ sev: 4, kind: "neutral", label: "Stalled " + fmtDuration(now - o.statusSince) + " in " + STATUS_LABEL[o.status].toLowerCase() });
+    if (reasons.length) {
+      reasons.sort((a, b) => a.sev - b.sev);
+      out.push({ order: o, reasons });
+    }
+  });
+  return out.sort((a, b) => (a.reasons[0].sev - b.reasons[0].sev) || (b.order.priority - a.order.priority));
+}
+/* ============================================================
+   Reducer: the whole fulfillment lifecycle lives here so both
+   the Office and Warehouse views act on one source of truth.
+   ============================================================ */
+
+function computePickupCutoff(now, courier) {
+  const [h, m] = pick(courier.pickups).split(":").map(Number);
+  let d = new Date(now);
+  d.setHours(h, m, 0, 0);
+  if (d.getTime() <= now) d = new Date(d.getTime() + 24 * HOUR);
+  return { label: h + ":" + String(m).padStart(2, "0"), cutoff: d.getTime() };
+}
+
+function withHistory(order, status, at) {
+  return { ...order, status, statusSince: at, history: [...order.history, { status, at }] };
+}
+
+function flagMissedPickups(state) {
+  let exceptions = state.exceptions;
+  let seq = state.nextExceptionSeq;
+  const orders = state.orders.map((o) => {
+    if (o.status === "staged" && o.pickupWindow && !o.pickupMissedFlagged && state.now > o.pickupWindow.cutoff) {
+      exceptions = [...exceptions, {
+        id: "EX" + seq++, orderId: o.id, type: "missed_pickup",
+        note: "Pickup window (" + o.pickupWindow.label + ") passed while the box was still in staging.",
+        reportedBy: "system", status: "open", createdAt: state.now, resolvedAt: null,
+      }];
+      return { ...o, pickupMissedFlagged: true };
+    }
+    return o;
+  });
+  return { ...state, orders, exceptions, nextExceptionSeq: seq };
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_STATE":
+      return action.state;
+
+    case "TICK": {
+      const next = { ...state, now: state.now + action.ms };
+      return flagMissedPickups(next);
+    }
+
+    case "RESET_DEMO":
+      return buildInitialState();
+
+    case "START_PROCESSING": {
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId && o.status === "received" ? withHistory(o, "processing", state.now) : o
+      );
+      return flagMissedPickups({ ...state, orders });
+    }
+
+    case "ASSIGN_COURIER": {
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId ? { ...o, courierId: action.courierId } : o
+      );
+      return { ...state, orders };
+    }
+
+    case "SEND_TO_PICKING": {
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId && o.courierId ? withHistory(o, "picking", state.now) : o
+      );
+      return flagMissedPickups({ ...state, orders });
+    }
+
+    case "PICK_ITEM": {
+      const order = state.orders.find((o) => o.id === action.orderId);
+      if (!order) return state;
+      const item = order.items.find((it) => it.productId === action.productId);
+      const products = state.products.map((p) =>
+        p.id === action.productId ? { ...p, mainStock: Math.max(0, p.mainStock - item.qty) } : p
+      );
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId
+          ? { ...o, pickedItems: { ...o.pickedItems, [action.productId]: true } }
+          : o
+      );
+      return { ...state, orders, products };
+    }
+
+    case "REQUEST_TRANSFER": {
+      const products = state.products.map((p) => {
+        if (p.id !== action.productId) return p;
+        const move = Math.min(p.secondaryStock, action.qty);
+        return { ...p, mainStock: p.mainStock + move, secondaryStock: p.secondaryStock - move };
+      });
+      return { ...state, products };
+    }
+
+    case "RECEIVE_STOCK": {
+      const products = state.products.map((p) =>
+        p.id === action.productId ? { ...p, mainStock: p.mainStock + action.qty } : p
+      );
+      return { ...state, products };
+    }
+
+    case "REPORT_EXCEPTION": {
+      const ex = {
+        id: "EX" + state.nextExceptionSeq, orderId: action.orderId || null, type: action.excType,
+        note: action.note || "", reportedBy: action.reportedBy || "warehouse",
+        status: "open", createdAt: state.now, resolvedAt: null,
+      };
+      return { ...state, exceptions: [...state.exceptions, ex], nextExceptionSeq: state.nextExceptionSeq + 1 };
+    }
+
+    case "RESOLVE_EXCEPTION": {
+      const exceptions = state.exceptions.map((e) =>
+        e.id === action.exceptionId ? { ...e, status: "resolved", resolvedAt: state.now, resolution: action.resolution || "" } : e
+      );
+      return { ...state, exceptions };
+    }
+
+    case "SEND_TO_PACKING": {
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId ? withHistory(o, "packing", state.now) : o
+      );
+      return flagMissedPickups({ ...state, orders });
+    }
+
+    case "TOGGLE_PACK_ITEM": {
+      const orders = state.orders.map((o) => {
+        if (o.id !== action.orderId) return o;
+        const nextVal = !o.packedItems[action.productId];
+        const flags = { ...(o.wrongItemFlags || {}) };
+        if (nextVal) delete flags[action.productId];
+        return { ...o, packedItems: { ...o.packedItems, [action.productId]: nextVal }, wrongItemFlags: flags };
+      });
+      return { ...state, orders };
+    }
+
+    case "FLAG_WRONG_ITEM": {
+      const order = state.orders.find((o) => o.id === action.orderId);
+      const product = state.products.find((p) => p.id === action.productId);
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId
+          ? {
+              ...o,
+              packedItems: { ...o.packedItems, [action.productId]: false },
+              wrongItemFlags: { ...(o.wrongItemFlags || {}), [action.productId]: true },
+            }
+          : o
+      );
+      const ex = {
+        id: "EX" + state.nextExceptionSeq, orderId: action.orderId, type: "wrong_item",
+        note: "Wrong item caught at the pack bench for " + (product ? product.name + " (" + product.variant + ")" : "an item") + " — sent back to be re-picked.",
+        reportedBy: "warehouse", status: "open", createdAt: state.now, resolvedAt: null,
+      };
+      return { ...state, orders, exceptions: [...state.exceptions, ex], nextExceptionSeq: state.nextExceptionSeq + 1 };
+    }
+
+    case "MARK_PACKED": {
+      let slot = state.nextSlotSeq || 1;
+      const orders = state.orders.map((o) => {
+        if (o.id !== action.orderId) return o;
+        const courier = state.couriers.find((c) => c.id === o.courierId);
+        const pickupWindow = computePickupCutoff(state.now, courier);
+        const staged = withHistory(o, "staged", state.now);
+        return { ...staged, stagingSlot: "S-" + String(slot).padStart(2, "0"), pickupWindow, pickupMissedFlagged: false };
+      });
+      const nextSlotSeq = (slot % 24) + 1;
+      return flagMissedPickups({ ...state, orders, nextSlotSeq });
+    }
+
+    case "HAND_TO_COURIER": {
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId ? withHistory(o, "shipped", state.now) : o
+      );
+      return { ...state, orders };
+    }
+
+    case "UPDATE_NOTES": {
+      const orders = state.orders.map((o) =>
+        o.id === action.orderId ? { ...o, notes: action.notes } : o
+      );
+      return { ...state, orders };
+    }
+
+    default:
+      return state;
+  }
+}
+const { useState, useEffect, useRef, useMemo, useReducer, createContext, useContext } = React;
+
+/* ---------- icons (small hand-drawn set, no icon font) ---------- */
+function Icon({ name, size = 16, className }) {
+  const s = size;
+  const common = { width: s, height: s, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round", className };
+  switch (name) {
+    case "star": return <svg {...common} fill="currentColor" stroke="none"><path d="M12 2.5l2.9 6.3 6.8.7-5.1 4.6 1.5 6.7L12 17.6 5.9 20.8l1.5-6.7-5.1-4.6 6.8-.7z" /></svg>;
+    case "warning": return <svg {...common}><path d="M12 3.5 2 20.5h20L12 3.5Z" /><path d="M12 10v4.5" /><circle cx="12" cy="17.4" r="0.6" fill="currentColor" stroke="none" /></svg>;
+    case "clock": return <svg {...common}><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg>;
+    case "check": return <svg {...common}><path d="M4 12.5l5 5L20 6.5" /></svg>;
+    case "x": return <svg {...common}><path d="M5 5l14 14M19 5L5 19" /></svg>;
+    case "truck": return <svg {...common}><rect x="1.5" y="7" width="13" height="9" rx="1" /><path d="M14.5 10h4l3 3v3h-7z" /><circle cx="6" cy="18" r="1.7" /><circle cx="17.5" cy="18" r="1.7" /></svg>;
+    case "box": return <svg {...common}><path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z" /><path d="M3 7.5v9L12 21l9-4.5v-9" /><path d="M12 12v9" /></svg>;
+    case "search": return <svg {...common}><circle cx="10.5" cy="10.5" r="6.5" /><path d="m20 20-4.3-4.3" /></svg>;
+    case "plus": return <svg {...common}><path d="M12 5v14M5 12h14" /></svg>;
+    case "chevronRight": return <svg {...common}><path d="m9 5 7 7-7 7" /></svg>;
+    case "chevronDown": return <svg {...common}><path d="m5 8 7 7 7-7" /></svg>;
+    case "swap": return <svg {...common}><path d="M4 8h13l-3-3M20 16H7l3 3" /></svg>;
+    case "note": return <svg {...common}><path d="M6 3h9l4 4v14H6z" /><path d="M15 3v4h4M9 12h6M9 16h6M9 8h3" /></svg>;
+    case "shield": return <svg {...common}><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /></svg>;
+    case "map": return <svg {...common}><path d="M9 4.5 4 6.5v13l5-2 6 2 5-2v-13l-5 2-6-2Z" /><path d="M9 4.5v13M15 6.5v13" /></svg>;
+    default: return null;
+  }
+}
+
+/* ---------- shared store context ---------- */
+const StoreCtx = createContext(null);
+function useStore() { return useContext(StoreCtx); }
+
+/* ---------- toasts ---------- */
+const ToastCtx = createContext(null);
+function ToastProvider({ children }) {
+  const [toasts, setToasts] = useState([]);
+  const push = (msg) => {
+    const id = Math.random().toString(36).slice(2);
+    setToasts((t) => [...t, { id, msg }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3200);
+  };
+  return (
+    <ToastCtx.Provider value={push}>
+      {children}
+      <div className="toast-stack">
+        {toasts.map((t) => <div className="toast" key={t.id}>{t.msg}</div>)}
+      </div>
+    </ToastCtx.Provider>
+  );
+}
+function useToast() { return useContext(ToastCtx); }
+
+/* ---------- status chip ---------- */
+function StatusChip({ status }) {
+  const kind = status === "shipped" ? "good" : status === "received" ? "neutral" : "info";
+  return <span className={"chip " + kind}>{STATUS_LABEL[status]}</span>;
+}
+
+function StockChip({ level }) {
+  if (level === "out") return <span className="chip danger">Out of stock</span>;
+  if (level === "low") return <span className="chip accent">Low stock</span>;
+  return <span className="chip good">In stock</span>;
+}
+
+/* ---------- drawer shell ---------- */
+function Drawer({ onClose, children }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <React.Fragment>
+      <div className="overlay" onClick={onClose} />
+      <div className="drawer" role="dialog" aria-modal="true">{children}</div>
+    </React.Fragment>
+  );
+}
+
+/* ---------- pipeline stepper (a real sequence, so numbering is earned) ---------- */
+function PipelineStepper({ status }) {
+  const idx = STATUS_FLOW.indexOf(status);
+  return (
+    <div className="stepper">
+      {STATUS_FLOW.map((s, i) => (
+        <div key={s} className={classNames("step", i < idx && "done", i === idx && "current")}>
+          <div className="bar" />
+          <div className="dot">{i < idx ? <Icon name="check" size={11} /> : i + 1}</div>
+          <div className="label">{STATUS_LABEL[s]}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+const OFFICE_TABS = [
+  { id: "dashboard", label: "Dashboard" },
+  { id: "inventory", label: "Inventory" },
+  { id: "couriers", label: "Couriers & pickups" },
+  { id: "exceptions", label: "Exceptions" },
+];
+
+function OfficeView() {
+  const [tab, setTab] = useState("dashboard");
+  const { state } = useStore();
+  const openExCount = state.exceptions.filter((e) => e.status === "open").length;
+  return (
+    <div>
+      <div className="office-tabs">
+        {OFFICE_TABS.map((t) => (
+          <button key={t.id} className={classNames(t.id === tab && "active")} onClick={() => setTab(t.id)}>
+            {t.label}
+            {t.id === "exceptions" && openExCount > 0 && <span className="count">{openExCount}</span>}
+          </button>
+        ))}
+      </div>
+      <div className="office-body">
+        {tab === "dashboard" && <Dashboard />}
+        {tab === "inventory" && <InventoryPanel />}
+        {tab === "couriers" && <CouriersPanel />}
+        {tab === "exceptions" && <ExceptionsPanel />}
+      </div>
+    </div>
+  );
+}
+
+/* ================= Dashboard / Kanban ================= */
+function Dashboard() {
+  const { state } = useStore();
+  const [query, setQuery] = useState("");
+  const [priorityOnly, setPriorityOnly] = useState(false);
+  const [openOrderId, setOpenOrderId] = useState(null);
+
+  const filtered = state.orders.filter((o) => {
+    if (priorityOnly && !o.priority) return false;
+    if (query.trim()) {
+      const q = query.trim().toLowerCase();
+      if (!o.id.toLowerCase().includes(q) && !o.customer.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  const columns = STATUS_FLOW.map((s) => ({
+    status: s,
+    orders: filtered.filter((o) => o.status === s).sort((a, b) => (b.priority - a.priority) || (a.statusSince - b.statusSince)),
+  }));
+
+  const openOrder = state.orders.find((o) => o.id === openOrderId);
+
+  return (
+    <div>
+      <AttentionPanel onOpen={setOpenOrderId} />
+      <div className="filter-bar">
+        <input type="text" placeholder="Search order # or customer" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <button className={classNames("chip-toggle", priorityOnly && "active")} onClick={() => setPriorityOnly((v) => !v)}>
+          <Icon name="star" size={12} /> Priority only
+        </button>
+        <span style={{ marginLeft: "auto", fontSize: 12.5, color: "var(--ink-faint)" }}>
+          Click any card for full detail
+        </span>
+      </div>
+      <div className="kanban">
+        {columns.map((col) => (
+          <div className="kanban-col" key={col.status}>
+            <div className="kanban-col-head">
+              <h3>{STATUS_LABEL[col.status]}</h3>
+              <span className="n">{col.orders.length}</span>
+            </div>
+            <div className="kanban-drop">
+              {col.orders.length === 0 && <div style={{ fontSize: 12.5, color: "var(--ink-faint)", padding: "6px 2px" }}>Nothing here</div>}
+              {col.orders.map((o) => <OrderCard key={o.id} order={o} onOpen={() => setOpenOrderId(o.id)} />)}
+            </div>
+          </div>
+        ))}
+      </div>
+      {openOrder && <OrderDrawer order={openOrder} onClose={() => setOpenOrderId(null)} />}
+    </div>
+  );
+}
+
+function AttentionPanel({ onOpen }) {
+  const { state } = useStore();
+  const items = attentionItems(state);
+  if (items.length === 0) {
+    return <div className="panel attention"><div className="attention-head"><h3>Needs attention</h3></div><div style={{ fontSize: 13.5, color: "var(--ink-soft)" }}>Nothing is late, stalled or flagged right now.</div></div>;
+  }
+  const shown = items.slice(0, 8);
+  return (
+    <div className="panel attention">
+      <div className="attention-head">
+        <h3>Needs attention</h3>
+        <span className="n-pill">{items.length}</span>
+      </div>
+      <div className="attention-list">
+        {shown.map(({ order, reasons }) => (
+          <button className="attention-row" key={order.id} onClick={() => onOpen(order.id)}>
+            <span className="mono aid">{order.id}</span>
+            <span className="acust">{order.customer}</span>
+            <span className={"chip " + reasons[0].kind}>{reasons[0].label}</span>
+            {reasons.length > 1 && <span className="amore">+{reasons.length - 1}</span>}
+          </button>
+        ))}
+      </div>
+      {items.length > shown.length && <div className="attention-more">and {items.length - shown.length} more — use the board below</div>}
+    </div>
+  );
+}
+
+function OrderCard({ order, onOpen }) {
+  const { state } = useStore();
+  const now = state.now;
+  const hasOpenEx = state.exceptions.some((e) => e.orderId === order.id && e.status === "open");
+  const overdue = order.priority && order.deadline && now > order.deadline && order.status !== "shipped";
+  const agingMs = now - order.statusSince;
+  const agingWarn = agingMs > 4 * HOUR && order.status !== "shipped";
+  return (
+    <div
+      className={classNames("order-card", order.priority && "is-priority", overdue && "is-overdue")}
+      onClick={onOpen}
+      role="button" tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter") onOpen(); }}
+    >
+      {hasOpenEx && <div className="badge-flag" title="Open exception"><Icon name="warning" size={11} /></div>}
+      <div className="top-row">
+        <span className="oid">{order.id}</span>
+        {order.priority && <Icon name="star" size={13} className="pin-star" />}
+      </div>
+      <div className="customer">{order.customer}</div>
+      <div className="meta-row">
+        <span className="channel-dot" /><span>{order.channel}</span><span>{order.items.length} item{order.items.length > 1 ? "s" : ""}</span>
+      </div>
+      <div className="meta-row">
+        <span className={classNames("age", agingWarn && "warn")}>{order.status === "shipped" ? "shipped " + fmtDuration(agingMs) + " ago" : fmtDuration(agingMs) + " in " + STATUS_LABEL[order.status].toLowerCase()}</span>
+        {order.priority && order.status !== "shipped" && (
+          <span className={classNames("age", overdue && "warn")}>
+            {overdue ? "deadline missed" : "due " + relFuture(now, order.deadline)}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ================= Order detail drawer ================= */
+function OrderDrawer({ order, onClose }) {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const products = state.products;
+  const stock = orderStockCheck(order, products);
+  const courier = state.couriers.find((c) => c.id === order.courierId);
+  const exceptions = state.exceptions.filter((e) => e.orderId === order.id);
+  const pickedCount = order.items.filter((it) => order.pickedItems[it.productId]).length;
+  const packedCount = order.items.filter((it) => order.packedItems[it.productId]).length;
+
+  return (
+    <Drawer onClose={onClose}>
+      <div className="drawer-head">
+        <div>
+          <div className="oid mono" style={{ fontSize: 13 }}>{order.id}</div>
+          <h3 style={{ fontSize: 20, marginTop: 2 }}>{order.customer}</h3>
+          <div style={{ fontSize: 12.5, color: "var(--ink-faint)", marginTop: 2 }}>{order.channel}, placed {ageLabel(state.now, order.createdAt)}</div>
+        </div>
+        <button className="drawer-close" onClick={onClose}><Icon name="x" size={18} /></button>
+      </div>
+      <div className="drawer-body">
+        <section>
+          <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+            <StatusChip status={order.status} />
+            {order.priority && <span className="chip accent"><Icon name="star" size={11} /> Priority</span>}
+            {order.priority && order.status !== "shipped" && (
+              <span className={classNames("chip", state.now > order.deadline ? "danger" : "neutral")}>
+                <Icon name="clock" size={11} /> {state.now > order.deadline ? "Overdue" : "Due " + relFuture(state.now, order.deadline)}
+              </span>
+            )}
+          </div>
+          <PipelineStepper status={order.status} />
+        </section>
+
+        {exceptions.length > 0 && (
+          <section>
+            <h4>Exceptions on this order</h4>
+            {exceptions.map((e) => (
+              <div key={e.id} style={{ fontSize: 13, marginBottom: 6, color: e.status === "open" ? "var(--danger)" : "var(--ink-faint)" }}>
+                {exceptionLabel(e.type)} — {e.note} {e.status === "resolved" && "(resolved)"}
+              </div>
+            ))}
+          </section>
+        )}
+
+        <section>
+          <h4>Items</h4>
+          {stock.map((s) => (
+            <div className="item-row" key={s.productId}>
+              <div className="swatch">{s.product.category[0]}</div>
+              <div>
+                <div className="name">{s.product.name}</div>
+                <div className="variant">{s.product.variant}, <span className="mono">{s.product.sku}</span></div>
+              </div>
+              <div className="qty">×{s.qty}</div>
+              {!s.mainAvail && (order.status === "received" || order.status === "processing") && (
+                <span className="chip danger sm" style={{ marginLeft: 6 }}>Only {s.product.mainStock} at Main</span>
+              )}
+            </div>
+          ))}
+        </section>
+
+        <section>
+          <h4>Shipping</h4>
+          {order.status === "received" && (
+            <button className="btn primary block" onClick={() => { dispatch({ type: "START_PROCESSING", orderId: order.id }); toast("Order moved to processing."); }}>
+              Start processing
+            </button>
+          )}
+          {(order.status === "processing") && (
+            <div>
+              <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>Choose a courier to create the shipping label.</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 10 }}>
+                {state.couriers.map((c) => (
+                  <label key={c.id} style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid var(--line)", borderRadius: 6, padding: "8px 10px", fontSize: 13.5, cursor: "pointer" }}>
+                    <input type="radio" name="courier" checked={order.courierId === c.id} onChange={() => dispatch({ type: "ASSIGN_COURIER", orderId: order.id, courierId: c.id })} />
+                    <span style={{ fontWeight: 600 }}>{c.name}</span>
+                    <span style={{ marginLeft: "auto", color: "var(--ink-faint)" }}>${c.cost.toFixed(2)}, {c.speedDays}d</span>
+                  </label>
+                ))}
+              </div>
+              <button className="btn primary block" disabled={!order.courierId} onClick={() => { dispatch({ type: "SEND_TO_PICKING", orderId: order.id }); toast("Label created — sent to the warehouse for picking."); }}>
+                Create label & send to picking
+              </button>
+              {!order.courierId && <div style={{ fontSize: 12, color: "var(--ink-faint)", marginTop: 6 }}>Pick a courier to enable this.</div>}
+            </div>
+          )}
+          {order.status === "picking" && (
+            <div style={{ fontSize: 13.5, color: "var(--ink-soft)" }}>
+              Waiting on the warehouse — {pickedCount}/{order.items.length} items picked so far.
+              <div className="wh-progress" style={{ background: "var(--line)", marginTop: 8 }}>
+                <div style={{ background: "var(--accent)", height: "100%", width: (pickedCount / order.items.length) * 100 + "%" }} />
+              </div>
+            </div>
+          )}
+          {order.status === "packing" && (
+            <div style={{ fontSize: 13.5, color: "var(--ink-soft)" }}>
+              At the pack bench — {packedCount}/{order.items.length} items confirmed via <b>{courier ? courier.name : "courier"}</b>.
+            </div>
+          )}
+          {order.status === "staged" && (
+            <div style={{ fontSize: 13.5, color: "var(--ink-soft)" }}>
+              Staged at <b className="mono">{order.stagingSlot}</b>, waiting for <b>{courier ? courier.name : "courier"}</b> pickup at {order.pickupWindow.label}
+              {state.now > order.pickupWindow.cutoff ? <span style={{ color: "var(--danger)", fontWeight: 600 }}> — pickup window has passed</span> : "."}
+              <button className="btn primary block" style={{ marginTop: 10 }} onClick={() => { dispatch({ type: "HAND_TO_COURIER", orderId: order.id }); toast("Marked as handed to courier."); }}>
+                Mark handed to courier
+              </button>
+            </div>
+          )}
+          {order.status === "shipped" && (
+            <div style={{ fontSize: 13.5, color: "var(--ink-soft)" }}>
+              Shipped via <b>{courier ? courier.name : "courier"}</b> {ageLabel(state.now, order.statusSince)}.
+            </div>
+          )}
+        </section>
+
+        <section>
+          <h4>Notes</h4>
+          <textarea className="notes-field" placeholder="Add a note for the team…" value={order.notes} onChange={(e) => dispatch({ type: "UPDATE_NOTES", orderId: order.id, notes: e.target.value })} />
+        </section>
+      </div>
+    </Drawer>
+  );
+}
+
+/* ================= Inventory ================= */
+function InventoryPanel() {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const rows = [...state.products].sort((a, b) => {
+    const rank = { out: 0, low: 1, ok: 2 };
+    return rank[stockStatus(a)] - rank[stockStatus(b)];
+  });
+  return (
+    <div>
+      <p style={{ fontSize: 13.5, color: "var(--ink-soft)", marginBottom: 12, maxWidth: 640 }}>
+        Stock only ships from Main. Anything sitting at Warehouse B has to be transferred over before it can be picked — that transfer happens automatically from the warehouse Pick screen when needed, or you can top up manually below to simulate a delivery being shelved.
+      </p>
+      <div className="table-scroll">
+        <table className="data-table">
+          <thead><tr><th>Product</th><th>SKU</th><th>Location</th><th>Main</th><th>Warehouse B</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            {rows.map((p) => {
+              const level = stockStatus(p);
+              return (
+                <tr key={p.id}>
+                  <td>{p.name} <span style={{ color: "var(--ink-faint)", marginLeft: 4 }}>{p.variant}</span></td>
+                  <td className="sku">{p.sku}</td>
+                  <td className="sku">{p.location}</td>
+                  <td className="mono">{p.mainStock}</td>
+                  <td className="mono">{p.secondaryStock}</td>
+                  <td><StockChip level={level} /></td>
+                  <td>
+                    {level !== "ok" && (
+                      <button className="btn sm" onClick={() => { dispatch({ type: "RECEIVE_STOCK", productId: p.id, qty: randInt(8, 16) }); toast("Delivery shelved for " + p.name + "."); }}>
+                        Receive delivery
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* ================= Couriers & pickups ================= */
+function CouriersPanel() {
+  const { state } = useStore();
+  const staged = state.orders.filter((o) => o.status === "staged" || (o.status === "shipped" && (state.now - o.statusSince) < 12 * HOUR));
+  const groups = {};
+  staged.forEach((o) => {
+    const key = o.courierId + "|" + (o.pickupWindow ? o.pickupWindow.label : "—");
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(o);
+  });
+  return (
+    <div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 10, marginBottom: 22 }}>
+        {state.couriers.map((c) => (
+          <div className="panel" style={{ padding: 14 }} key={c.id}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16 }}>{c.name}</div>
+            <div style={{ fontSize: 12.5, color: "var(--ink-faint)", marginBottom: 8 }}>{c.blurb}</div>
+            <div style={{ fontSize: 13 }}>${c.cost.toFixed(2)} per parcel, {c.speedDays}-day delivery</div>
+            <div style={{ fontSize: 12.5, color: "var(--ink-soft)", marginTop: 4 }}>Pickup {c.pickups.join(" & ")}</div>
+          </div>
+        ))}
+      </div>
+      <h4 style={{ fontFamily: "var(--font-display)", fontSize: 15, marginBottom: 10 }}>Today's pickups</h4>
+      <div className="table-scroll">
+        <table className="data-table">
+          <thead><tr><th>Order</th><th>Courier</th><th>Slot</th><th>Window</th><th>Status</th></tr></thead>
+          <tbody>
+            {Object.entries(groups).flatMap(([key, orders]) => orders).sort((a, b) => a.pickupWindow.cutoff - b.pickupWindow.cutoff).map((o) => {
+              const c = state.couriers.find((c) => c.id === o.courierId);
+              const missed = o.status === "staged" && state.now > o.pickupWindow.cutoff;
+              return (
+                <tr key={o.id}>
+                  <td className="mono">{o.id}</td>
+                  <td>{c ? c.name : "—"}</td>
+                  <td className="sku">{o.stagingSlot}</td>
+                  <td className="mono">{o.pickupWindow.label}</td>
+                  <td>
+                    {o.status === "shipped" ? <span className="chip good">Picked up</span> :
+                     missed ? <span className="chip danger">Missed</span> :
+                     <span className="chip neutral">Waiting</span>}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* ================= Exceptions ================= */
+function ExceptionsPanel() {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const [filter, setFilter] = useState("open");
+  const list = state.exceptions
+    .filter((e) => filter === "all" || e.status === filter)
+    .sort((a, b) => b.createdAt - a.createdAt);
+  return (
+    <div>
+      <div className="filter-bar">
+        {["open", "resolved", "all"].map((f) => (
+          <button key={f} className={classNames("chip-toggle", filter === f && "active")} onClick={() => setFilter(f)}>
+            {f[0].toUpperCase() + f.slice(1)}
+          </button>
+        ))}
+      </div>
+      <div className="panel" style={{ padding: "4px 16px" }}>
+        {list.length === 0 && <div style={{ padding: "30px 4px", color: "var(--ink-faint)", fontSize: 13.5 }}>Nothing to show — no exceptions here.</div>}
+        {list.map((e) => (
+          <div className={classNames("exception-row", e.status === "resolved" && "resolved")} key={e.id}>
+            <div className="ico"><Icon name={e.status === "resolved" ? "check" : "warning"} size={15} /></div>
+            <div className="body">
+              <div style={{ fontSize: 12.5, color: "var(--ink-faint)" }}>
+                <b style={{ color: "var(--ink)", fontWeight: 600 }}>{exceptionLabel(e.type)}</b>{e.orderId && <span className="mono" style={{ marginLeft: 8 }}>{e.orderId}</span>}<span style={{ marginLeft: 8 }}>reported by {e.reportedBy}</span>
+              </div>
+              <div className="note">{e.note}</div>
+              <div className="meta">{ageLabel(state.now, e.createdAt)}{e.resolvedAt ? ", resolved " + ageLabel(state.now, e.resolvedAt) : ""}</div>
+            </div>
+            {e.status === "open" && (
+              <button className="btn sm" onClick={() => { dispatch({ type: "RESOLVE_EXCEPTION", exceptionId: e.id }); toast("Exception resolved."); }}>
+                Resolve
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+const WH_TABS = [
+  { id: "pick", label: "Pick" },
+  { id: "pack", label: "Pack" },
+  { id: "stage", label: "Stage & ship" },
+  { id: "report", label: "Report a problem" },
+];
+
+function WarehouseView() {
+  const { state } = useStore();
+  const [tab, setTab] = useState("pick");
+  const pickCount = state.orders.filter((o) => o.status === "picking").length;
+  const packCount = state.orders.filter((o) => o.status === "packing").length;
+  const missedCount = state.orders.filter((o) => o.status === "staged" && state.now > o.pickupWindow.cutoff).length;
+  const counts = { pick: pickCount, pack: packCount, stage: missedCount };
+
+  return (
+    <div className="wh-shell">
+      <div className="wh-segment">
+        {WH_TABS.map((t) => (
+          <button key={t.id} className={classNames(t.id === tab && "active", t.id === "report" && "report")} onClick={() => setTab(t.id)}>
+            <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              {t.label}
+              {t.id === "stage" && missedCount > 0 && <span className="badge-dot">{missedCount}</span>}
+            </span>
+            {(t.id === "pick" || t.id === "pack") && <span style={{ fontSize: 11, color: "#7C8480" }}>{counts[t.id]} waiting</span>}
+          </button>
+        ))}
+      </div>
+      <div className="wh-body">
+        {tab === "pick" && <PickFlow />}
+        {tab === "pack" && <PackFlow />}
+        {tab === "stage" && <StageFlow />}
+        {tab === "report" && <ReportProblemFlow />}
+      </div>
+    </div>
+  );
+}
+
+function useQueue(status) {
+  const { state } = useStore();
+  const queue = state.orders
+    .filter((o) => o.status === status)
+    .sort((a, b) => (b.priority - a.priority) || (a.statusSince - b.statusSince));
+  const [currentId, setCurrentId] = useState(queue[0] ? queue[0].id : null);
+  useEffect(() => {
+    if (!queue.find((o) => o.id === currentId)) setCurrentId(queue[0] ? queue[0].id : null);
+    // eslint-disable-next-line
+  }, [queue.map((o) => o.id).join(",")]);
+  const index = queue.findIndex((o) => o.id === currentId);
+  const current = queue[index] || queue[0] || null;
+  return { queue, current, index: Math.max(index, 0) };
+}
+
+/* ================= Pick ================= */
+function PickFlow() {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const { queue, current, index } = useQueue("picking");
+  const [openIssueFor, setOpenIssueFor] = useState(null);
+
+  if (!current) {
+    return (
+      <div className="wh-empty">
+        <div className="big-emoji">📦</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 19, color: "#F4F4F0" }}>Nothing to pick right now</div>
+        <div style={{ marginTop: 4 }}>New orders will show up here once the office creates a label.</div>
+      </div>
+    );
+  }
+
+  const overdue = current.priority && current.deadline && state.now > current.deadline;
+  const allDone = current.items.every((it) => current.pickedItems[it.productId]);
+
+  return (
+    <div>
+      <div className="wh-queue-head">
+        <span className="of">Order {index + 1} of {queue.length}</span>
+        {current.priority && <span className={classNames("wh-pill", overdue ? "overdue" : "priority")}><Icon name="star" size={12} /> {overdue ? "Overdue" : "Priority"}</span>}
+      </div>
+      <div className="wh-order-title">{current.customer}</div>
+      <div className="wh-order-sub mono">{current.id}, {current.items.length} item{current.items.length > 1 ? "s" : ""}
+        {current.priority && !overdue && ", due " + relFuture(state.now, current.deadline)}
+      </div>
+      <div className="wh-progress">
+        <div style={{ width: (current.items.filter((it) => current.pickedItems[it.productId]).length / current.items.length) * 100 + "%" }} />
+      </div>
+
+      {current.items.map((it) => {
+        const p = state.products.find((pr) => pr.id === it.productId);
+        const done = !!current.pickedItems[it.productId];
+        const openIssue = openIssueFor === it.productId;
+        const needed = it.qty;
+        const shortBy = Math.max(0, needed - p.mainStock);
+        const insufficient = shortBy > 0;
+        const canTransfer = !done && shortBy > 0 && p.secondaryStock >= shortBy;
+        const trulyShort = !done && shortBy > 0 && p.secondaryStock < shortBy;
+        return (
+          <div className={classNames("wh-item-card", done && "done")} key={it.productId}>
+            <div className="head">
+              <div>
+                <div className="pname">{p.name}</div>
+                <div className="pvariant">{p.variant}</div>
+                <div className="wh-loc-chip"><Icon name="map" size={13} /> {p.location}</div>
+              </div>
+              <div className="pqty">×{needed}<span>needed</span></div>
+            </div>
+            {!done && (
+              <div className="wh-actions">
+                <button className="wh-btn go wide" disabled={insufficient} onClick={() => { dispatch({ type: "PICK_ITEM", orderId: current.id, productId: it.productId }); setOpenIssueFor(null); }}>
+                  <Icon name="check" size={18} /> Got it
+                </button>
+                <button className="wh-btn ghost" onClick={() => setOpenIssueFor(openIssue ? null : it.productId)}>Can't find it</button>
+              </div>
+            )}
+            {!done && insufficient && !openIssue && (
+              <div style={{ color: "#F0B79C", fontSize: 13, marginTop: 8 }}>Only {p.mainStock} at Main right now — tap "Can't find it" to check Warehouse B.</div>
+            )}
+            {done && <div style={{ color: "#57C79A", fontSize: 14, marginTop: 10, fontWeight: 600 }}><Icon name="check" size={14} /> Picked</div>}
+            {openIssue && canTransfer && (
+              <div className="wh-inline-alert">
+                {p.secondaryStock} in stock at Warehouse B. Request a transfer, then come back and confirm.
+                <div className="cta">
+                  <button className="wh-btn go" onClick={() => { dispatch({ type: "REQUEST_TRANSFER", productId: p.id, qty: shortBy }); toast("Transfer requested from Warehouse B."); setOpenIssueFor(null); }}>
+                    <Icon name="swap" size={16} /> Request transfer
+                  </button>
+                </div>
+              </div>
+            )}
+            {openIssue && trulyShort && (
+              <div className="wh-inline-alert">
+                Not enough anywhere: {p.mainStock} at Main + {p.secondaryStock} at Warehouse B, but {needed} needed.
+                <div className="cta">
+                  <button className="wh-btn go" onClick={() => {
+                    dispatch({ type: "REPORT_EXCEPTION", orderId: current.id, excType: "missing_stock", reportedBy: "warehouse", note: p.name + " (" + p.variant + ") short by " + shortBy + " unit(s) — not enough at Main or Warehouse B." });
+                    toast("Reported to the office.");
+                    setOpenIssueFor(null);
+                  }}>
+                    <Icon name="warning" size={16} /> Report to office
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      <button className="wh-btn go big" style={{ width: "100%", marginTop: 6 }} disabled={!allDone} onClick={() => { dispatch({ type: "SEND_TO_PACKING", orderId: current.id }); toast("Sent to packing."); }}>
+        Send to packing <Icon name="chevronRight" size={18} />
+      </button>
+      {!allDone && <div style={{ textAlign: "center", color: "#7C8480", fontSize: 13, marginTop: 8 }}>Confirm or report every item to continue.</div>}
+    </div>
+  );
+}
+
+/* ================= Pack ================= */
+function PackFlow() {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const { queue, current, index } = useQueue("packing");
+  const [showLabel, setShowLabel] = useState(false);
+
+  if (!current) {
+    return (
+      <div className="wh-empty">
+        <div className="big-emoji">🏷️</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 19, color: "#F4F4F0" }}>No orders waiting to be packed</div>
+        <div style={{ marginTop: 4 }}>Picked orders will land here next.</div>
+      </div>
+    );
+  }
+  const courier = state.couriers.find((c) => c.id === current.courierId);
+  const allPacked = current.items.every((it) => current.packedItems[it.productId]);
+
+  if (showLabel) {
+    return (
+      <div>
+        <div className="wh-queue-head">
+          <span className="of">Label preview</span>
+          <button className="wh-btn ghost" onClick={() => setShowLabel(false)}><Icon name="x" size={16} /></button>
+        </div>
+        <div className="label-preview">
+          <div className="lrow"><span>SHIP VIA</span><span>{courier ? courier.name.toUpperCase() : ""}</span></div>
+          <div className="lto">{current.customer}<br />123 Fictional Ave, Sample City</div>
+          <div className="lrow"><span>ORDER</span><span>{current.id}</span></div>
+          <div className="lrow"><span>WEIGHT</span><span>{(current.items.reduce((s, it) => s + it.qty, 0) * 0.4).toFixed(1)} kg</span></div>
+          <div className="barcode">
+            {Array.from({ length: 96 }).map((_, i) => (
+              <span key={i} style={{ width: [1, 2, 1, 3, 1, 1, 2, 1][i % 8] + "px" }} />
+            ))}
+          </div>
+          <div className="lid">{current.id.replace("-", "")}</div>
+        </div>
+        <button className="wh-btn go big" style={{ width: "100%", marginTop: 16 }} onClick={() => { dispatch({ type: "MARK_PACKED", orderId: current.id }); toast("Packed — moved to staging."); setShowLabel(false); }}>
+          <Icon name="box" size={18} /> Mark packed & staged
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="wh-queue-head">
+        <span className="of">Order {index + 1} of {queue.length}</span>
+        {current.priority && <span className="wh-pill priority"><Icon name="star" size={12} /> Priority</span>}
+      </div>
+      <div className="wh-order-title">{current.customer}</div>
+      <div className="wh-order-sub mono">{current.id}, ships via {courier ? courier.name : "courier"}</div>
+
+      {current.items.map((it) => {
+        const p = state.products.find((pr) => pr.id === it.productId);
+        const checked = !!current.packedItems[it.productId];
+        const flagged = current.wrongItemFlags && current.wrongItemFlags[it.productId];
+        return (
+          <div className={classNames("wh-item-card", checked && "done")} key={it.productId} style={{ cursor: "pointer" }} onClick={() => dispatch({ type: "TOGGLE_PACK_ITEM", orderId: current.id, productId: it.productId })}>
+            <div className="head">
+              <div>
+                <div className="pname">{p.name}</div>
+                <div className="pvariant mono">{p.sku}, {p.variant}</div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="pqty">×{it.qty}</div>
+                <div style={{ width: 30, height: 30, borderRadius: 8, border: "1.5px solid " + (checked ? "#57C79A" : "#3C464A"), background: checked ? "#57C79A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#14181A" }}>
+                  {checked && <Icon name="check" size={16} />}
+                </div>
+              </div>
+            </div>
+            {flagged && <div className="wh-inline-alert" style={{ marginTop: 10 }}>Flagged as a wrong item earlier — check the shelf again before ticking this off.</div>}
+            {!checked && !flagged && (
+              <button className="wh-btn ghost" style={{ marginTop: 10, width: "100%" }} onClick={(e) => { e.stopPropagation(); dispatch({ type: "FLAG_WRONG_ITEM", orderId: current.id, productId: it.productId }); toast("Flagged — sent back to be re-picked."); }}>
+                Not the right item?
+              </button>
+            )}
+          </div>
+        );
+      })}
+
+      <button className="wh-btn go big" style={{ width: "100%", marginTop: 6 }} disabled={!allPacked} onClick={() => setShowLabel(true)}>
+        <Icon name="note" size={18} /> Print label
+      </button>
+      {!allPacked && <div style={{ textAlign: "center", color: "#7C8480", fontSize: 13, marginTop: 8 }}>Tap each item to confirm it's the right one.</div>}
+    </div>
+  );
+}
+
+/* ================= Stage & ship ================= */
+function StageFlow() {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const staged = state.orders.filter((o) => o.status === "staged").sort((a, b) => a.pickupWindow.cutoff - b.pickupWindow.cutoff);
+
+  if (staged.length === 0) {
+    return (
+      <div className="wh-empty">
+        <div className="big-emoji">🚚</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 19, color: "#F4F4F0" }}>Nothing staged right now</div>
+        <div style={{ marginTop: 4 }}>Packed boxes waiting for pickup will show up here.</div>
+      </div>
+    );
+  }
+
+  const groups = [];
+  staged.forEach((o) => {
+    const c = state.couriers.find((c) => c.id === o.courierId);
+    const key = (c ? c.name : "Courier") + ", pickup " + o.pickupWindow.label;
+    let g = groups.find((g) => g.key === key);
+    if (!g) { g = { key, orders: [] }; groups.push(g); }
+    g.orders.push(o);
+  });
+
+  return (
+    <div>
+      {groups.map((g) => (
+        <div key={g.key}>
+          <div className="pickup-group-head"><h4>{g.key}</h4><div className="line" /></div>
+          {g.orders.map((o) => {
+            const missed = state.now > o.pickupWindow.cutoff;
+            return (
+              <div className="wh-panel" key={o.id}>
+                <div className="row1 stack">
+                  <div>
+                    <div className="oid">{o.id}</div>
+                    <div className="customer">{o.customer}</div>
+                    <div className="sub">Slot {o.stagingSlot}, {missed ? <span style={{ color: "#FF6A4D", fontWeight: 600 }}>pickup window passed</span> : "pickup " + relFuture(state.now, o.pickupWindow.cutoff)}</div>
+                  </div>
+                  <button className="wh-btn go block" onClick={() => { dispatch({ type: "HAND_TO_COURIER", orderId: o.id }); toast("Handed to courier."); }}>
+                    <Icon name="truck" size={17} /> Handed to courier
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ================= Report a problem ================= */
+const PROBLEM_TYPES = [
+  { id: "missing_stock", label: "Missing stock", emoji: "📦" },
+  { id: "wrong_item", label: "Wrong item", emoji: "🔀" },
+  { id: "misplaced_box", label: "Box misplaced", emoji: "🔎" },
+  { id: "other", label: "Something else", emoji: "✏️" },
+];
+
+function ReportProblemFlow() {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const [type, setType] = useState(null);
+  const [search, setSearch] = useState("");
+  const [orderId, setOrderId] = useState(null);
+  const [note, setNote] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const matches = search.trim().length > 0
+    ? state.orders.filter((o) => o.status !== "shipped" && (o.id.toLowerCase().includes(search.toLowerCase()) || o.customer.toLowerCase().includes(search.toLowerCase()))).slice(0, 5)
+    : [];
+
+  function reset() { setType(null); setSearch(""); setOrderId(null); setNote(""); setSent(false); }
+
+  if (sent) {
+    return (
+      <div className="wh-empty">
+        <div className="big-emoji">✅</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 19, color: "#F4F4F0" }}>Reported</div>
+        <div style={{ marginTop: 4 }}>The office can see this now.</div>
+        <button className="wh-btn go" style={{ marginTop: 18, display: "inline-flex" }} onClick={reset}>Report another</button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="wh-order-title" style={{ marginBottom: 14 }}>What went wrong?</div>
+      <div className="wh-type-grid">
+        {PROBLEM_TYPES.map((t) => (
+          <button key={t.id} className={classNames("wh-type-btn", type === t.id && "selected")} onClick={() => setType(t.id)}>
+            <span className="emoji">{t.emoji}</span>{t.label}
+          </button>
+        ))}
+      </div>
+
+      {type && (
+        <div style={{ marginTop: 20 }}>
+          <div style={{ color: "#A9B0AC", fontSize: 13.5, marginBottom: 6 }}>Which order? (optional)</div>
+          <input className="wh-search" placeholder="Search order # or customer" value={orderId ? orderId : search} onFocus={() => setOrderId(null)} onChange={(e) => { setSearch(e.target.value); setOrderId(null); }} />
+          {!orderId && matches.map((o) => (
+            <div key={o.id} className="wh-pick-suggestion" onClick={() => { setOrderId(o.id); setSearch(o.id); }} style={{ cursor: "pointer" }}>
+              <span>{o.customer} <span className="mono" style={{ color: "#7C8480" }}>{o.id}</span></span>
+              <Icon name="chevronRight" size={16} />
+            </div>
+          ))}
+
+          <div style={{ color: "#A9B0AC", fontSize: 13.5, margin: "14px 0 6px" }}>Add a note (optional)</div>
+          <textarea className="wh-textarea" placeholder="What did you notice?" value={note} onChange={(e) => setNote(e.target.value)} />
+
+          <button className="wh-btn go big" style={{ width: "100%", marginTop: 16 }} onClick={() => {
+            dispatch({ type: "REPORT_EXCEPTION", orderId: orderId, excType: type, reportedBy: "warehouse", note: note.trim() || PROBLEM_TYPES.find((t) => t.id === type).label + " reported from the floor." });
+            toast("Reported to the office.");
+            setSent(true);
+          }}>
+            <Icon name="warning" size={18} /> Submit report
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+function TopBar({ role, setRole }) {
+  const { state, dispatch } = useStore();
+  const toast = useToast();
+  const priorityActive = state.orders.filter((o) => o.priority && o.status !== "shipped").length;
+  const openEx = state.exceptions.filter((e) => e.status === "open").length;
+  // Two-step confirm instead of window.confirm(), which sandboxed/hosted frames can silently block.
+  const [confirmReset, setConfirmReset] = useState(false);
+  useEffect(() => {
+    if (!confirmReset) return undefined;
+    const t = setTimeout(() => setConfirmReset(false), 4000);
+    return () => clearTimeout(t);
+  }, [confirmReset]);
+
+  return (
+    <div className="topbar">
+      <div className="brand">
+        <div className="mark">X</div>
+        <div>
+          <h1>XYZ Fulfillment Hub</h1>
+          <div className="tagline">From order to courier, in one place</div>
+        </div>
+      </div>
+
+      <div className="role-toggle" role="tablist" aria-label="View">
+        <button className={classNames(role === "office" && "active")} onClick={() => setRole("office")}>
+          <Icon name="box" size={15} /> Office
+        </button>
+        <button className={classNames(role === "warehouse" && "active")} onClick={() => setRole("warehouse")}>
+          <Icon name="truck" size={15} /> Warehouse
+        </button>
+      </div>
+
+      <div className="clock-widget" title="Demo clock — fast-forward to watch deadlines and pickups play out">
+        <Icon name="clock" size={14} />
+        <span className="time">{fmtClock(state.now)}</span>
+        <button className="ff-btn" onClick={() => dispatch({ type: "TICK", ms: HOUR })}>+1h</button>
+        <button className="ff-btn" onClick={() => dispatch({ type: "TICK", ms: 4 * HOUR })}>+4h</button>
+      </div>
+
+      <span className={classNames("stat-chip", priorityActive > 0 && "")}>
+        <Icon name="star" size={12} /> <b>{priorityActive}</b> priority active
+      </span>
+      <span className={classNames("stat-chip", openEx > 0 && "warn")}>
+        <Icon name="warning" size={12} /> <b>{openEx}</b> open exception{openEx === 1 ? "" : "s"}
+      </span>
+
+      <button className="reset-link" onClick={() => {
+        if (!confirmReset) { setConfirmReset(true); return; }
+        setConfirmReset(false);
+        dispatch({ type: "RESET_DEMO" });
+        toast("Demo data reset to the starting sample.");
+      }}>
+        {confirmReset ? "Click again to reset" : "Reset demo"}
+      </button>
+    </div>
+  );
+}
+
+function Root() {
+  const [state, dispatch] = useReducer(reducer, null, () => loadState() || buildInitialState());
+  const [role, setRole] = useState("office");
+
+  useEffect(() => {
+    saveState(state);
+  }, [state]);
+
+  useEffect(() => {
+    dispatch({ type: "TICK", ms: 0 });
+    const id = setInterval(() => dispatch({ type: "TICK", ms: 2 * MIN }), 5000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line
+  }, []);
+
+  return (
+    <StoreCtx.Provider value={{ state, dispatch }}>
+      <ToastProvider>
+        <div className={classNames("app-shell", role === "warehouse" && "is-wh")}>
+          <TopBar role={role} setRole={setRole} />
+          {role === "office" ? <OfficeView /> : <WarehouseView />}
+        </div>
+      </ToastProvider>
+    </StoreCtx.Provider>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<Root />);
+
+</script>
+</body>
+</html>

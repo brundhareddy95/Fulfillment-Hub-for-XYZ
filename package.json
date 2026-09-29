@@ -1,0 +1,16 @@
+{
+  "name": "xyz-fulfillment-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Take-home: a simple fulfillment app for a small e-commerce business",
+  "scripts": {
+    "build": "sh build.sh",
+    "test": "sh build.sh && node tests/unit_test.js && node tests/smoke_test.js && node tests/interaction_test.js && node tests/blocked_flow_test.js"
+  },
+  "devDependencies": {
+    "@babel/standalone": "^7.24.0",
+    "jsdom": "^24.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}
